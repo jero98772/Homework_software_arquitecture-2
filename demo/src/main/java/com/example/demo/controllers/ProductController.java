@@ -2,24 +2,24 @@ package com.example.demo.controllers;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import java.util.Map;
-import java.util.List;
+import org.springframework.web.bind.annotation.PostMapping;
 import jakarta.validation.Valid;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 public class ProductController {
     private static final List<Map<String, String>> products = new ArrayList<>(List.of(
-        Map.of("id", "1", "name", "TV", "description", "Best TV"),
-        Map.of("id", "2", "name", "iPhone", "description", "Best iPhone"),
-        Map.of("id", "3", "name", "Chromecast", "description", "Best Chromecast"),
-        Map.of("id", "4", "name", "Glasses", "description", "Best Glasses")
+        Map.of("id", "1", "name", "TV", "description", "Best TV", "price", "299.99"),
+        Map.of("id", "2", "name", "iPhone", "description", "Best iPhone", "price", "999.99"),
+        Map.of("id", "3", "name", "Chromecast", "description", "Best Chromecast", "price", "35.99"),
+        Map.of("id", "4", "name", "Glasses", "description", "Best Glasses", "price", "150.00")
     ));
 
     @GetMapping("/products")
@@ -32,16 +32,21 @@ public class ProductController {
 
     @GetMapping("/products/{id}")
     public String show(@PathVariable String id, Model model) {
-        int productId = Integer.parseInt(id) - 1;
-        if (productId < 0 || productId >= products.size()) {
-            return "redirect:/products";
+        try {
+            int productId = Integer.parseInt(id) - 1;
+            if (productId < 0 || productId >= products.size()) {
+                return "redirect:/"; // Redirect to home instead of products
+            }
+            Map<String, String> product = products.get(productId);
+            model.addAttribute("title", product.get("name") + " - Online Store");
+            model.addAttribute("subtitle", product.get("name") + " - Product Information");
+            model.addAttribute("product", product);
+            return "product/show";
+        } catch (NumberFormatException e) {
+            return "redirect:/"; // Redirect to home for invalid number format
         }
-        Map<String, String> product = products.get(productId);
-        model.addAttribute("title", product.get("name") + " - Online Store");
-        model.addAttribute("subtitle", product.get("name") + " - Product Information");
-        model.addAttribute("product", product);
-        return "product/show";
     }
+
     @GetMapping("/products/create")
     public String create(Model model) {
         model.addAttribute("title", "Create Product");
@@ -59,10 +64,18 @@ public class ProductController {
         Map<String, String> newProduct = new HashMap<>();
         newProduct.put("id", String.valueOf(products.size() + 1));
         newProduct.put("name", productForm.getName());
-        newProduct.put("description", "Price: $" + productForm.getPrice());
+        newProduct.put("description", "New product added");
+        newProduct.put("price", String.valueOf(productForm.getPrice()));
         products.add(newProduct);
         
-        return "redirect:/products";
+        // Redirect to success page instead of products list
+        model.addAttribute("title", "Product Created Successfully");
+        model.addAttribute("subtitle", "Success");
+        model.addAttribute("message", "Product '" + productForm.getName() + "' has been created successfully!");
+        model.addAttribute("productName", productForm.getName());
+        model.addAttribute("productPrice", productForm.getPrice());
+        
+        return "product/success";
     }
-
 }
+

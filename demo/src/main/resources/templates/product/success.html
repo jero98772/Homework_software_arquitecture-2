@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+    <title th:text="${title}"></title>
+</head>
+<body>
+    <div th:replace="~{fragments/header :: header}"></div>
+    <div class="container my-4">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="alert alert-success text-center" role="alert">
+                    <h4 class="alert-heading">Product Created!</h4>
+                    <p th:text="${message}"></p>
+                    <hr>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <strong>Product Name:</strong> <span th:text="${productName}"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Price:</strong> $<span th:text="${productPrice}"></span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="text-center">
+                    <a th:href="@{/products}" class="btn btn-primary me-2">View All Products</a>
+                    <a th:href="@{/products/create}" class="btn btn-secondary">Create Another Product</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

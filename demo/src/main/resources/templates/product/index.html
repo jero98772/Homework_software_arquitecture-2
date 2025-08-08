@@ -16,9 +16,11 @@
                 <div class="card">
                     <img src="https://placehold.co/600x400" class="card-img-top img-card">
                     <div class="card-body text-center">
+                        <h6 class="card-title" th:text="${product.name}"></h6>
+                        <p class="card-text text-success">$<span th:text="${product.price}"></span></p>
                         <a th:href="@{/products/{id}(id=${product.id})}"
-                        class="btn bg-primary text-white"
-                        th:text="${product.name}">
+                        class="btn bg-primary text-white">
+                            View Details
                         </a>
                     </div>
                 </div>

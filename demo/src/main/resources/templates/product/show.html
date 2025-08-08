@@ -17,8 +17,20 @@
                 </div>
                 <div class="col-md-8">
                     <div class="card-body">
-                        <h5 class="card-title" th:text="${product.name}"></h5>
+                        <!-- Conditional display: red text if price > 100 -->
+                        <h5 class="card-title" 
+                            th:class="${#numbers.formatDecimal(product.price, 0, 2) > 100} ? 'card-title text-danger' : 'card-title'"
+                            th:text="${product.name}">
+                        </h5>
                         <p class="card-text" th:text="${product.description}"></p>
+                        <p class="card-text">
+                            <strong>Price: $</strong><span th:text="${product.price}"></span>
+                        </p>
+                        <!-- Display warning for expensive products -->
+                        <div th:if="${#numbers.formatDecimal(product.price, 0, 2) > 100}" class="alert alert-warning">
+                            <small>This is a premium product!</small>
+                        </div>
+                        <a th:href="@{/products}" class="btn btn-secondary">Back to Products</a>
                     </div>
                 </div>
             </div>
